@@ -1,0 +1,119 @@
+[
+  {
+    "name": "search",
+    "title": "Search treg Catalog",
+    "description": "Find catalogued endpoints by the job you need done, with prices and success rates.",
+    "routePath": "treg/search"
+  },
+  {
+    "name": "call",
+    "title": "Call treg Tool",
+    "description": "Make the real upstream request to a catalogued endpoint id through treg.to and see what it cost.",
+    "routePath": "treg/call",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "rest": {
+          "type": "string",
+          "description": "Catalogued endpoint id (e.g. moz.web.url.metrics), a team tool as name/path, or an upstream URL."
+        },
+        "method": {
+          "type": "string",
+          "description": "HTTP method; defaults to POST when a body is given, else GET."
+        },
+        "query": {
+          "type": "object",
+          "description": "Query parameters."
+        },
+        "body": {
+          "type": "object",
+          "description": "JSON body (object, or a JSON string that gets parsed)."
+        },
+        "max_cost_usd": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "Per-call ceiling in USD, sent as X-Treg-Route-Max-Cost."
+        },
+        "idempotency_key": {
+          "type": "string",
+          "description": "Send on a retry of a maybe-charged timeout: same key replays the stored answer free."
+        },
+        "meta": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "description": "Attribution tags, \"customer=c1, feature=x\" or an object."
+        }
+      },
+      "required": [
+        "rest"
+      ]
+    }
+  },
+  {
+    "name": "balance",
+    "title": "treg Balance",
+    "description": "Show the treg team's billing and balance.",
+    "routePath": "treg/balance"
+  },
+  {
+    "name": "catalog",
+    "title": "catalog",
+    "description": "Router for catalog",
+    "routes": [
+      {
+        "name": "endpoint",
+        "description": "Get a catalogued endpoint's parameters, price, reliability and a ready call line. Token-free.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "endpoint_id": {
+              "type": "string",
+              "description": "Endpoint id from the catalog, e.g. treg.web.backlinks.list."
+            }
+          },
+          "required": [
+            "endpoint_id"
+          ]
+        },
+        "routePath": "treg/catalog/endpoint"
+      },
+      {
+        "name": "search",
+        "description": "Search the treg catalog by the job you need done. Token-free.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "q": {
+              "type": "string",
+              "description": "What you want done, e.g. \"backlinks for a domain\" or \"text to video\"."
+            },
+            "limit": {
+              "type": "number",
+              "description": "Max results, default 8."
+            },
+            "added_within_days": {
+              "type": "number",
+              "description": "Only tools added within the last N days."
+            },
+            "sort": {
+              "type": "string",
+              "description": "e.g. \"newest\"."
+            },
+            "engine": {
+              "type": "string",
+              "description": ""
+            }
+          },
+          "required": [
+            "q"
+          ]
+        },
+        "routePath": "treg/catalog/search"
+      }
+    ]
+  }
+]
