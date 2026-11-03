@@ -4,7 +4,7 @@ description: >
   Search 4,000+ catalogued provider endpoints (SEO, SERP, backlinks, social, enrichment, ads, scraping, media generation) and call them through treg.to — one token, credentials stay on treg's servers, every answer reports what it cost.
 metadata:
   author: Iteractive Development
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # treg: the tool catalog, via Enconvo
@@ -19,8 +19,8 @@ Local API routes (port 54535 while Enconvo runs):
 
 | Route | Purpose | Token needed |
 |---|---|---|
-| `treg/catalog/search` `{q, limit?, added_within_days?, sort?}` | Find tools by job, with prices | no |
-| `treg/catalog/endpoint` `{endpoint_id}` | Parameters, price, reliability, ready call line | no |
+| `treg/catalog/search` `{q, limit?, added_within_days?, sort?, engine?}` | Find tools by job, with prices. `q` required; `limit` default 8 | no |
+| `treg/catalog/endpoint` `{endpoint_id}` (required) | Parameters, price, reliability, ready call line | no |
 | `treg/call` `{rest, method?, query?, body?, max_cost_usd?, idempotency_key?, meta?}` | Make the real request | yes |
 | `treg/balance` `{}` | Team billing and balance | yes |
 
@@ -83,4 +83,4 @@ A found email or phone is the provider's best match, **not a confirmed one**. On
 ## Attribution
 
 Adapted from [treg.to/skill.md](https://treg.to/skill.md) (© Superdesign, superdesign.dev),
-Apache License 2.0 with additional terms — see this plugin's LICENSE.
+Apache License 2.0 with additional terms (hosted-service restriction) — see this plugin's [LICENSE](../LICENSE).
