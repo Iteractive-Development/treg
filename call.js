@@ -12,13 +12,13 @@ async function x(t){
   if(/[\u0000-\u001f\u007f]/.test(rest)||segs.some(i=>i===".."||i==="."))return Response.json({error:"rest must be a single endpoint path under /call/ (no . or .. segments, no control characters)"},{status:400});
   let n={};
   if(e.idempotency_key!=null&&e.idempotency_key!==""){
-    if(typeof e.idempotency_key!=="string"||/[\u0000-\u001f\u007f]/.test(e.idempotency_key))return Response.json({error:"idempotency_key must be a string without control characters"},{status:400});
+    if(typeof e.idempotency_key!=="string"||/[\u0000-\u001f\u007f\u0100-\uffff]/.test(e.idempotency_key))return Response.json({error:"idempotency_key must be a string of Latin-1 characters with no control characters"},{status:400});
     n["Idempotency-Key"]=e.idempotency_key;
   }
   let meta=null;
   if(typeof e.meta==="string")meta=e.meta;else if(e.meta&&typeof e.meta=="object"&&!Array.isArray(e.meta))meta=Object.entries(e.meta).map(([i,d])=>`${i}=${d}`).join(", ");else if(e.meta!=null)return Response.json({error:"meta must be a string or an object of string values"},{status:400});
   if(meta!=null){
-    if(/[\u0000-\u001f\u007f]/.test(meta))return Response.json({error:"meta must not contain control characters"},{status:400});
+    if(/[\u0000-\u001f\u007f\u0100-\uffff]/.test(meta))return Response.json({error:"meta must be Latin-1 characters with no control characters"},{status:400});
     n["X-Treg-Meta"]=meta;
   }
   if(e.method!=null&&!["GET","POST","PUT","PATCH","DELETE","HEAD","OPTIONS"].includes(String(e.method).toUpperCase()))return Response.json({error:"method must be a standard HTTP method"},{status:400});
@@ -26,7 +26,7 @@ async function x(t){
   if(typeof r=="string"){let i=r.trim();if(i.startsWith("{")||i.startsWith("["))try{r=JSON.parse(i)}catch{}}
   let s=await y(e);
   if(e.max_cost_usd!=null&&e.max_cost_usd!=="")s.maxCostUsd=String(e.max_cost_usd);
-  for(let v of [s.token,s.org,s.maxCostUsd])if(v&&/[\u0000-\u001f\u007f]/.test(v))return Response.json({error:"token, org and max_cost_usd values must not contain control characters"},{status:400});
+  for(let v of [s.token,s.org,s.maxCostUsd])if(v&&/[\u0000-\u001f\u007f\u0100-\uffff]/.test(v))return Response.json({error:"token, org and max_cost_usd values must be Latin-1 with no control characters"},{status:400});
   let o=await p({path:"/call/"+segs.map(encodeURIComponent).join("/"),method:e.method??(r!==void 0?"POST":"GET"),query:e.query,body:r,headers:n},s);
   return h(o,s.token);
 }
